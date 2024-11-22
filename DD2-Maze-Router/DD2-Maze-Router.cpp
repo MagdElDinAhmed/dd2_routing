@@ -10,13 +10,14 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	// Initialize variables
 	vector<vector<vector<Cell>>> detailed_grid;
 	vector<Nets> nets;
 	detailed_grid.resize(2);
 	int bend_penalty, via_penalty;
-
 	TextParser tp("test.txt");
+	
+	// Read file
 	cout << tp.getFilename() << endl;
 	if (tp.readFile(bend_penalty, via_penalty, detailed_grid, nets))
 	{
