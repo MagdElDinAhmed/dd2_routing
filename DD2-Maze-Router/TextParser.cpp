@@ -118,7 +118,11 @@ vector<int> TextParser::parseFirstLine(string line, bool &success) {
     }
 
 	// Output the numbers
-
+	if (numbers.size() != 4) {
+		cout << "Invalid first line data" << endl;
+		success = false;
+		return numbers;
+	}
 	for (int i = 0; i < numbers.size(); i++) {
 		cout << numbers[i] << endl;
 	}
