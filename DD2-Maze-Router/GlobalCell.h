@@ -1,15 +1,20 @@
 #pragma once
+#include <iostream>
+#include "Cell.h"
 
-class GlobalCell {
+class GlobalCell : public Cell {
 public:
     // Constructor
-    GlobalCell(int cap);
+    GlobalCell(cell_type type, int capacity);
 
-    // Getter for capacity
-    int getCapacity();
+    // Destructor
+    ~GlobalCell();
 
-    // Setter for capacity
-    void setCapacity(int cap);
+    // Getter for global cost
+    int getCapacity() const;
+
+    // Setter for global cost
+    void setCapacity(int capacity);
 
 private:
     int capacity;

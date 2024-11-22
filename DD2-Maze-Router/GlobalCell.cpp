@@ -4,14 +4,17 @@
 using namespace std;
 
 // Constructor
-GlobalCell::GlobalCell(int cap) : capacity(cap) {}
+GlobalCell::GlobalCell(cell_type type, int globalCost) : Cell(type), capacity(capacity) {}
 
-// Getter for capacity
-int GlobalCell::getCapacity() {
-    return capacity;
+// Destructor
+GlobalCell::~GlobalCell() {}
+
+// Getter for global cost
+int GlobalCell::getCapacity() const {
+	return capacity;
 }
 
-// Setter for capacity
-void GlobalCell::setCapacity(int cap) {
-    capacity = cap;
+// Setter for global cost
+void GlobalCell::setCapacity(int capacity) {
+	this->capacity = capacity;
 }
