@@ -4,5 +4,11 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
+#include "Nets.h"
+#include "Cell.h"
+#include "CellType.h"
+#include "TextParser.h"
+
 
 // TODO: Reference additional headers your program requires here.

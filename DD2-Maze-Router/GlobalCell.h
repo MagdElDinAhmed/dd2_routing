@@ -1,5 +1,4 @@
-#ifndef GLOBALCELL_H
-#define GLOBALCELL_H
+#pragma once
 
 class GlobalCell {
 public:
@@ -15,5 +14,3 @@ public:
 private:
     int capacity;
 };
-
-#endif // GLOBALCELL_H

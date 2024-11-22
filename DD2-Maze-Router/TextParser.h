@@ -1,5 +1,4 @@
-#ifndef TEXTPARSER_H
-#define TEXTPARSER_H
+#pragma once
 
 # include <iostream>
 # include <string>
@@ -8,6 +7,7 @@
 # include <sstream>
 # include <algorithm>
 # include "Cell.h"
+# include "Nets.h"
 
 using namespace std;
 
@@ -26,10 +26,10 @@ public:
 	void setFilename(string filename);
 
 	// Read file
-	void readFile();
+	void readFile(int &bend_penalty, int &via_penalty, vector<vector<vector<Cell>>> &detailed_grid, vector<Nets> &nets);
 
 	// Parse lines
-	void parseLine(string line);
+	void parseLine(string line, vector<vector<vector<Cell>>>& detailed_grid, vector<Nets>& nets);
 
 	// Parse first line
 	vector<int> parseFirstLine(string line);
@@ -37,5 +37,3 @@ public:
 private:
 	string filename;
 };
-
-#endif // TEXTPARSER_H
