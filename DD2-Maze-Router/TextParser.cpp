@@ -3,7 +3,7 @@
 #include "TextParser.h"
 #include "Cell.h"
 #include "CellType.h"
-#include "Nets.h"
+#include "Net.h"
 
 using namespace std;
 
@@ -130,7 +130,7 @@ vector<int> TextParser::parseFirstLine(string line, bool &success) {
 }
 
 // Parse lines
-bool TextParser::parseLine(string line, vector<vector<vector<Cell>>> &detailed_grid, vector<Nets> &nets) {
+bool TextParser::parseLine(string line, vector<vector<vector<Cell>>> &detailed_grid, vector<Net> &nets) {
     stringstream ss(line);
     string word;
     ss >> word;
@@ -178,7 +178,7 @@ bool TextParser::parseLine(string line, vector<vector<vector<Cell>>> &detailed_g
 		// Handle net case
 		
 		// Create a new net (id determined by the number after "net")
-		nets.push_back(Nets(stoi(word.substr(3))));
+		nets.push_back(Net(stoi(word.substr(3))));
         stringstream ss(line);
         string temp;
         vector<int> netData;
@@ -215,7 +215,7 @@ bool TextParser::parseLine(string line, vector<vector<vector<Cell>>> &detailed_g
 }
 
 // Read file
-bool TextParser::readFile(int& bend_penalty, int& via_penalty, vector<vector<vector<Cell>>> &detailed_grid, vector<Nets> &nets) {
+bool TextParser::readFile(int& bend_penalty, int& via_penalty, vector<vector<vector<Cell>>> &detailed_grid, vector<Net> &nets) {
 	cout << "Reading file: " << filename << endl;
     ifstream file(filename);
     string line;

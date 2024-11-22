@@ -7,13 +7,13 @@
 
 using namespace std;
 
-class Nets {
+class Net {
 public:
     // Constructor
-    Nets(int net_id);
+    Net(int net_id);
 
     // Destructor
-    ~Nets();
+    ~Net();
 
     // Getter for net_id
     int getNetId();

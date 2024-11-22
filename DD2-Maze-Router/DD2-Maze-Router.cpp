@@ -12,7 +12,7 @@ int main()
 {
 	// Initialize variables
 	vector<vector<vector<Cell>>> detailed_grid;
-	vector<Nets> nets;
+	vector<Net> nets;
 	detailed_grid.resize(2);
 	int bend_penalty, via_penalty;
 	TextParser tp("test.txt");

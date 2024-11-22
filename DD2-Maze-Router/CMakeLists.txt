@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(DD2-Maze-Router 
     DD2-Maze-Router.cpp 
     TextParser.cpp
-    Nets.cpp
+    Net.cpp
     Cell.cpp
- "Nets.cpp")
+)
 
 # Include directories
 target_include_directories(DD2-Maze-Router PUBLIC "${PROJECT_SOURCE_DIR}")
