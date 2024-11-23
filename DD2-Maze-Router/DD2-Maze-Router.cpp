@@ -10,19 +10,27 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	// Initialize variables
 	vector<vector<vector<Cell>>> detailed_grid;
-	vector<Nets> nets;
+	vector<Net> nets;
 	detailed_grid.resize(2);
 	int bend_penalty, via_penalty;
-
 	TextParser tp("test.txt");
+	
+	// Read file
 	cout << tp.getFilename() << endl;
-	tp.readFile(bend_penalty, via_penalty, detailed_grid, nets);
-
-	for (int i = 0; i < nets.size(); i++) {
-		cout << "Net " << nets[i].getNetId() << endl;
-		nets[i].printPins();
+	if (tp.readFile(bend_penalty, via_penalty, detailed_grid, nets))
+	{
+		for (int i = 0; i < nets.size(); i++) {
+			cout << "Net " << nets[i].getNetId() << endl;
+			nets[i].printPins();
+		}
 	}
+	else
+	{
+		cout << "Failed to read file" << endl;
+	}
+
+	
 	return 0;
 }
