@@ -34,7 +34,7 @@ During the process, we need to ensure data validity, so we check that:
 
 For the first line specifically, we check that we only have 4 numbers.
 ## Visualization
----
+
 1. **Visualization Components**:
    - **Grid**:
      - Represented as a rectangular boundary.
