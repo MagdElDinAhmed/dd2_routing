@@ -7,6 +7,11 @@ using namespace std;
 // Constructor
 Cell::Cell(cell_type type) : type(type), cost(INT32_MAX) {}
 
+Cell::Cell()
+{
+    type = OBSTACLE;
+}
+
 // Destructor
 Cell::~Cell() {}
 
@@ -29,4 +34,9 @@ cell_type Cell::getType() const {
 // Setter for type
 void Cell::setType(cell_type type) {
     this->type = type;
+}
+
+bool Cell::operator>(Cell const& rhs)
+{
+    return getCost() > rhs.getCost();
 }

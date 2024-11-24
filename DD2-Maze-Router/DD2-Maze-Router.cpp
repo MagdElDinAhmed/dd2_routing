@@ -31,6 +31,10 @@ int main()
 		cout << "Failed to read file" << endl;
 	}
 
+	Router r;
+	for (int i = 0; i < nets.size(); i++) {
+		r.route(nets.at(i), detailed_grid, bend_penalty, via_penalty);
+	}
 	
 	return 0;
 }

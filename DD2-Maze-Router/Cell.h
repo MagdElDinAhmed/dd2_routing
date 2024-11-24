@@ -9,6 +9,7 @@ public:
 
     // Constructor
     Cell(cell_type type);
+    Cell();
 
     // Destructor
     ~Cell();
@@ -24,6 +25,8 @@ public:
 
     // Setter for type
     void setType(cell_type type);
+
+    bool operator>(Cell const& rhs);
 
 
 private:
