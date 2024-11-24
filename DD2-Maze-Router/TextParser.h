@@ -7,7 +7,7 @@
 # include <sstream>
 # include <algorithm>
 # include "Cell.h"
-# include "Nets.h"
+# include "Net.h"
 
 using namespace std;
 
@@ -26,13 +26,13 @@ public:
 	void setFilename(string filename);
 
 	// Read file
-	void readFile(int &bend_penalty, int &via_penalty, vector<vector<vector<Cell>>> &detailed_grid, vector<Nets> &nets);
+	bool readFile(int &bend_penalty, int &via_penalty, vector<vector<vector<Cell>>> &detailed_grid, vector<Net> &nets);
 
 	// Parse lines
-	void parseLine(string line, vector<vector<vector<Cell>>>& detailed_grid, vector<Nets>& nets);
+	bool parseLine(string line, vector<vector<vector<Cell>>>& detailed_grid, vector<Net>& nets);
 
 	// Parse first line
-	vector<int> parseFirstLine(string line);
+	vector<int> parseFirstLine(string line, bool &success);
 
 private:
 	string filename;

@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <vector>
-#include "Nets.h"
+#include "Net.h"
 #include "Cell.h"
 #include "CellType.h"
 #include "TextParser.h"
