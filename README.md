@@ -37,6 +37,8 @@ During the process, we need to ensure data validity, so we check that:
 - No obstacle or pin is being placed in an occupied space
 
 For the first line specifically, we check that we only have 4 numbers.
+### How to run
+Change the name of the file into `test_<number>` then build and run `DD2-Maze-Router.cpp`.
 ## Visualization
 
 1. **Visualization Components**:
@@ -107,6 +109,7 @@ Work was initially split as global routing, detailed routing, and visualization.
 - Provided text parsing
 - Wrote the initial code for the classes used
 - Initial set up of the nets, obstacles, and the grid itself
+- Aided in the routing algorithm development
 #### Challenges
 - Ensuring errors in the text file are accounted for such that the program doesn't crash or produce errors
 ### Tarek Kassab
