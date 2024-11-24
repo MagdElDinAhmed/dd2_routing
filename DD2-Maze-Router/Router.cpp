@@ -1,6 +1,6 @@
 #include "Router.h"
 
-bool Router::route(Net net, std::vector<std::vector<std::vector<Cell>>>& grid, int bend, int via)
+bool Router::route(Net& net, std::vector<std::vector<std::vector<Cell>>>& grid, int bend, int via)
 {
     // Get width and length
     width = grid[0].size();
@@ -30,6 +30,7 @@ bool Router::route(Net net, std::vector<std::vector<std::vector<Cell>>>& grid, i
 
     // Print the result and cleanup
     printResult();
+	net.setPath(result);
     cleanUpAfterAllRoutes();
     return true;
 }
@@ -123,7 +124,7 @@ void Router::retraceToSource(std::vector<int> source)
     std::vector<int> currentNode = source;
     Cell& currentCell = (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]];
     while (currentCell.getType() != SOURCE) {
-        result.push_back(currentNode);
+        result.insert(result.begin(),currentNode);
         currentCell.setType(SOURCE);
 
         std::vector<std::vector<int>> adj_nodes = getAdjacentNodes(currentNode);
@@ -147,7 +148,7 @@ void Router::retraceToSource(std::vector<int> source)
             currentCell = (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]];
         }
     }
-    result.push_back(currentNode);
+    result.insert(result.begin(), currentNode);
     (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]].setType(SOURCE);
 }
 

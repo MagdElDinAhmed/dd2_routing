@@ -11,7 +11,7 @@
 class Router
 {
 public:
-    bool route(Net net, std::vector<std::vector<std::vector<Cell>>>& grid, int bend, int via);
+    bool route(Net& net, std::vector<std::vector<std::vector<Cell>>>& grid, int bend, int via);
     std::vector<std::vector<std::vector<Cell>>>* grid; // Pointer to grid
 
 private:
