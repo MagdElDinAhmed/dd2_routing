@@ -33,6 +33,68 @@ During the process, we need to ensure data validity, so we check that:
 - No obstacle or pin is being placed in an occupied space
 
 For the first line specifically, we check that we only have 4 numbers.
+## Visualization
+
+1. **Visualization Components**:
+   - **Grid**:
+     - Represented as a rectangular boundary.
+     - Only the outer border of the grid is displayed to keep the visualization clean.
+   - **Obstructions**:
+     - Shown as **black cells** on the grid, indicating areas that cannot be used.
+   - **Pins**:
+     - Represented by **red cells** where each net begins or ends.
+   - **Paths**:
+     - Calculated by the Lee Algorithm and visualized using distinct colors for each net.
+     - Example Colors:
+       - `net1`: Blue
+       - `net2`: Green
+       - `net3`: Orange
+
+2. **Visualization Details**:
+   - **`matplotlib`**:
+     - Used for static visualization of the grid and paths.
+   - **Dynamic Coloring**:
+     - Paths are color-coded to differentiate between nets.
+   - **Aspect Ratio**:
+     - The grid is displayed with an equal aspect ratio to ensure cells appear square.
+   - **Annotations**:
+     - The visualization is divided into two grids:
+       - **Metal Layer 1**: For paths and obstacles on layer 1.
+       - **Metal Layer 2**: For paths and obstacles on layer 2.
+
+3. **Algorithm**:
+   - The Lee Algorithm is used to calculate the shortest path connecting the pins of each net.
+   - The paths account for:
+     - Grid constraints (dimensions and obstacles).
+     - Layer transitions for multi-layer paths.
+
+---
+
+#### **How to Use**
+1. **Input Files**:
+   - Place `input.txt` and `output.txt` in the project directory.
+   - Ensure the input format matches the expected structure.
+
+2. **Run the Script**:
+   - Execute the Python script:
+     ```
+     python lee_maze_visualization.py
+     ```
+
+3. **Output**:
+   - A graphical visualization of the grid with obstacles, pins, and calculated paths.
+
+---
+
+#### **Key Features**
+- **Clean Visualization**:
+  - No grid lines, only the outer border is displayed for clarity.
+- **Dynamic Path Colors**:
+  - Each net's path is displayed in a distinct color for better differentiation.
+- **Multi-Layer Support**:
+  - Obstructions, pins, and paths are visualized separately for each metal layer.
+
+---
 ## Team Workflow
 Work was initially split as global routing, detailed routing, and visualization. Global routing was dropped due to complexities regarding sizing the global boxes and making the dynamic costs make sense. Eventually, the initial setup and parsing proved to be sufficient work instead of global routing. Parsing had to be done first, but visualization van run in parallel given a mock routed path.
 ## Individual Contributions
@@ -46,3 +108,4 @@ Work was initially split as global routing, detailed routing, and visualization.
 ### Tarek Kassab
 
 ### Yousef Mansour
+- Visulaization
