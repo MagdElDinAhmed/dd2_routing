@@ -1,269 +1,173 @@
 #include "Router.h"
 
-vector<vector<vector<Cell>>> Router::grid = vector<vector<vector<Cell>>>();
-
-bool Router::route(Net net, vector<vector<vector<Cell>>>& grid, int bend, int via)
+bool Router::route(Net net, std::vector<std::vector<std::vector<Cell>>>& grid, int bend, int via)
 {
-	//get width and length
-	width = grid[0].size();
-	length = grid[0][0].size();
-	this->grid = grid;
-	bendPenality = bend;
-	viaPenality = via;
+    // Get width and length
+    width = grid[0].size();
+    length = grid[0][0].size();
+    this->grid = &grid; // Point to the original grid
+    bendPenality = bend;
+    viaPenality = via;
 
-	//loop over the pins in the net setting their type correctly in the grid
-	vector<vector<int>> pins = net.getPins();
-	for (int i = 0; i < pins.size(); i++) {
-		vector<int> currentPin = pins[i];
-		Cell cell;
-		getCellFromNode(currentPin, cell);
-		cell.setType(SOURCE);
-	}
+    // Loop over the pins in the net, setting their type correctly in the grid
+    std::vector<std::vector<int>> pins = net.getPins();
+    for (size_t i = 0; i < pins.size(); i++) {
+        const std::vector<int>& currentPin = pins[i];
+        Cell& currentCell = (*this->grid)[currentPin[0]][currentPin[2]][currentPin[1]];
+        currentCell.setType(TARGET);
+    }
 
-	//Loop over each pin connecting it to the network
-	for (int i = 0; i < pins.size(); i++) {
-		vector<int> target = pins[i];
-		Cell tarCell;
-		getCellFromNode(target, tarCell);
-		tarCell.setType(TARGET);
-		vector<int> source = findClosestSource(target);
-		if (source.at(0) == -1)
-			return false;
-		retraceToTarget(source);
-	}
+    // Loop over each pin, connecting it to the network
+    for (size_t i = 0; i < pins.size()-1; i++) {
+        const std::vector<int>& target = pins[i];
+        Cell& source_cell = (*this->grid)[target[0]][target[2]][target[1]];
+        source_cell.setType(SOURCE);
+        std::vector<int> source = findClosestTarget(target);
+        if (source[0] == -1)
+            return false;
+        retraceToSource(source);
+    }
 
-	//Print the result and cleanup
-	printResult();
-	cleanUpAfterAllRoutes();
-	return true;
+    // Print the result and cleanup
+    printResult();
+    cleanUpAfterAllRoutes();
+    return true;
 }
 
-vector<int> Router::findClosestSource(vector<int> target)
+std::vector<int> Router::findClosestTarget(std::vector<int> target)
 {
-	priority_queue<vector<int>, vector<vector<int>>, comp> nodeQueue;
-	//vector<vector<vector<bool>>> visited(2, vector<vector<bool>>(width, vector<bool>(length, false)));
-	nodeQueue.push(target);
-	//visited[target[0]][target[1]][target[2]] = true;
-	Cell targetCell;
-	getCellFromNode(target, targetCell);
-	targetCell.setCost(0);
-	while (!nodeQueue.empty()) {
-		vector<int> currentNode = nodeQueue.top();
-		nodeQueue.pop();
-		Cell currentCell;
-		getCellFromNode(currentNode, currentCell);
-		if (currentCell.getType() == SOURCE)
-			return currentNode;
-		if (currentNode.at(0) == 0) {
-			vector<int> adj_node = currentNode;
+    // Pass 'this' to the comparator
+    std::priority_queue<std::vector<int>, std::vector<std::vector<int>>, comp> nodeQueue(comp(this));
+    std::vector<std::vector<std::vector<bool>>> visited(2, std::vector<std::vector<bool>>(width, std::vector<bool>(length, false)));
+    nodeQueue.push(target);
+    visited[target[0]][target[2]][target[1]] = true;
+    (*this->grid)[target[0]][target[2]][target[1]].setCost(0);
 
-			//node on top
-			adj_node.at(0) = 1;
-			Cell adj_cell;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + viaPenality && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + viaPenality);
-				nodeQueue.push(adj_node);
-			}
+    while (!nodeQueue.empty()) {
+        std::vector<int> currentNode = nodeQueue.top();
+        nodeQueue.pop();
+        Cell& currentCell = (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]];
 
-			//node to the right
-			adj_node.at(0) = 0;
-			adj_node.at(1) = adj_node.at(1) + 1;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + 1 && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + 1);
-				nodeQueue.push(adj_node);
-			}
+        if (currentCell.getType() == TARGET)
+            return currentNode;
 
-			//node to the left
-			adj_node.at(1) = adj_node.at(1) - 2;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + 1 && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + 1);
-				nodeQueue.push(adj_node);
-			}
+        std::vector<std::vector<int>> adj_nodes = getAdjacentNodes(currentNode);
 
-			//node forward
-			adj_node.at(1) = adj_node.at(1) + 1;
-			adj_node.at(2) = adj_node.at(2) + 1;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + bendPenality && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + bendPenality);
-				nodeQueue.push(adj_node);
-			}
+        for (const auto& adj_node : adj_nodes) {
+            if (isValidNode(adj_node)) {
+                Cell& adj_cell = (*this->grid)[adj_node[0]][adj_node[2]][adj_node[1]];
+                int cost = currentCell.getCost() + getMoveCost(currentNode, adj_node);
 
-			//node backward
-			adj_node.at(2) = adj_node.at(2) - 2;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + bendPenality && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + bendPenality);
-				nodeQueue.push(adj_node);
-			}
-		}
-		else if (currentNode.at(0) != NULL && currentNode.at(0) == 1) {
-			vector<int> adj_node = currentNode;
+                if (!visited[adj_node[0]][adj_node[2]][adj_node[1]] &&
+                    adj_cell.getCost() > cost && adj_cell.getType() != OBSTACLE) {
+                    if (cost < adj_cell.getCost())
+                    {
+                        adj_cell.setCost(cost);
+                    }
+                    nodeQueue.push(adj_node);
+                    visited[adj_node[0]][adj_node[2]][adj_node[1]] = true;
+                }
+            }
+        }
+    }
 
-			//node below
-			adj_node.at(0) = 0;
-			Cell adj_cell;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + viaPenality && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + viaPenality);
-				nodeQueue.push(adj_node);
-			}
-
-			//node to the right
-			adj_node.at(0) = 1;
-			adj_node.at(1) = adj_node.at(1) + 1;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + bendPenality && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + bendPenality);
-				nodeQueue.push(adj_node);
-			}
-
-			//node to the left
-			adj_node.at(1) = adj_node.at(1) - 2;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + bendPenality && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + bendPenality);
-				nodeQueue.push(adj_node);
-			}
-
-			//node forward
-			adj_node.at(1) = adj_node.at(1) + 1;
-			adj_node.at(2) = adj_node.at(2) + 1;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + 1 && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + 1);
-				nodeQueue.push(adj_node);
-			}
-
-			//node backward
-			adj_node.at(2) = adj_node.at(2) - 2;
-			getCellFromNode(adj_node, adj_cell);
-			if (adj_cell.getCost() > currentCell.getCost() + 1 && adj_cell.getType() != OBSTACLE) {
-				adj_cell.setCost(currentCell.getCost() + 1);
-				nodeQueue.push(adj_node);
-			}
-		}
-	}
-	vector<int> result = { -1 };
-	return result;
-
+    return { -1 }; // Return invalid node if no source is found
 }
 
-void Router::retraceToTarget(vector<int> source)
+std::vector<std::vector<int>> Router::getAdjacentNodes(const std::vector<int>& node)
 {
-	vector<int> currentNode = source;
-	vector<int> selected = currentNode;
-	Cell currentCell;
-	getCellFromNode(currentNode, currentCell);
-	while (currentCell.getType() != TARGET) {
-		result.push_back(currentNode);
-		Cell adj_cell;
-		getCellFromNode(currentNode, adj_cell);
-		adj_cell.setType(SOURCE);
-		vector<int> adj_node = currentNode;
-		selected = currentNode;
+    std::vector<std::vector<int>> adj_nodes;
 
-		//search for next node smallest node in cost
-		int min_cost = INT32_MAX;
+    if (node[0] == 0 || node[0] == 1) {
+        // Nodes in the same layer
+        std::vector<int> directions = { -1, 1 };
+        for (int d : directions) {
+            // Horizontal movement
+            std::vector<int> adj_node = node;
+            adj_node[1] += d;
+            adj_nodes.push_back(adj_node);
 
-		adj_node.at(1) = adj_node.at(1) + 1;
-		getCellFromNode(adj_node, adj_cell);
-		if (adj_cell.getCost() < min_cost && adj_cell.getType() != OBSTACLE) {
-			min_cost = adj_cell.getCost();
-			selected = adj_node;
-		}
+            // Vertical movement
+            adj_node = node;
+            adj_node[2] += d;
+            adj_nodes.push_back(adj_node);
+        }
 
-		adj_node.at(1) = adj_node.at(1) - 2;
-		getCellFromNode(adj_node, adj_cell);
-		if (adj_cell.getCost() < min_cost && adj_cell.getType() != OBSTACLE) {
-			min_cost = adj_cell.getCost();
-			selected = adj_node;
-		}
+        // Via movement
+        std::vector<int> adj_node = node;
+        adj_node[0] = 1 - node[0]; // Switch layer
+        adj_nodes.push_back(adj_node);
+    }
+    return adj_nodes;
+}
 
-		adj_node.at(1) = adj_node.at(1) + 1;
-		adj_node.at(2) = adj_node.at(2) + 1;
-		getCellFromNode(adj_node, adj_cell);
-		if (adj_cell.getCost() < min_cost && adj_cell.getType() != OBSTACLE) {
-			min_cost = adj_cell.getCost();
-			selected = adj_node;
-		}
+int Router::getMoveCost(const std::vector<int>& fromNode, const std::vector<int>& toNode)
+{
+    if (fromNode[0] != toNode[0]) {
+        return viaPenality; // Moving between layers
+    } else if (fromNode[1] != toNode[1] && fromNode[2] != toNode[2]) {
+        return bendPenality; // Changing direction (bend)
+    } else {
+        return 1; // Straight movement
+    }
+}
 
-		adj_node.at(2) = adj_node.at(2) - 2;
-		getCellFromNode(adj_node, adj_cell);
-		if (adj_cell.getCost() < min_cost && adj_cell.getType() != OBSTACLE) {
-			min_cost = adj_cell.getCost();
-			selected = adj_node;
-		}
+bool Router::isValidNode(const std::vector<int>& node) const {
+    return node[0] >= 0 && node[0] < grid->size() &&
+           node[1] >= 0 && node[1] < (*grid)[0].size() &&
+           node[2] >= 0 && node[2] < (*grid)[0][0].size();
+}
 
-		adj_node.at(2) = adj_node.at(2) + 1;
-		if (adj_node.at(0) == 0)
-			adj_node.at(0) = 1;
-		else
-			adj_node.at(0) = 0;
-		getCellFromNode(adj_node, adj_cell);
-		if (adj_cell.getCost() < min_cost && adj_cell.getType() != OBSTACLE) {
-			min_cost = adj_cell.getCost();
-			selected = adj_node;
-		}
+void Router::retraceToSource(std::vector<int> source)
+{
+    std::vector<int> currentNode = source;
+    Cell& currentCell = (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]];
+    while (currentCell.getType() != SOURCE) {
+        result.push_back(currentNode);
+        currentCell.setType(SOURCE);
 
-		if (selected == currentNode)
-			break;
-		else {
-			currentNode = selected;
-			getCellFromNode(currentNode, currentCell);
-		}
-	}
-	result.push_back(currentNode);
-	getCellFromNode(currentNode, currentCell);
-	currentCell.setType(SOURCE);
+        std::vector<std::vector<int>> adj_nodes = getAdjacentNodes(currentNode);
+        int min_cost = INT_MAX;
+        std::vector<int> selected = currentNode;
+
+        for (const auto& adj_node : adj_nodes) {
+            if (isValidNode(adj_node)) {
+                Cell& adj_cell = (*this->grid)[adj_node[0]][adj_node[2]][adj_node[1]];
+                if (adj_cell.getCost() < min_cost && adj_cell.getType() != OBSTACLE) {
+                    min_cost = adj_cell.getCost();
+                    selected = adj_node;
+                }
+            }
+        }
+
+        if (selected == currentNode)
+            break;
+        else {
+            currentNode = selected;
+            currentCell = (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]];
+        }
+    }
+    result.push_back(currentNode);
+    (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]].setType(SOURCE);
 }
 
 void Router::printResult()
 {
-	for (int i = 0; i < result.size(); i++) {
-		cout << "(" << result.at(i).at(0) << "," << result.at(i).at(1) << "," << result.at(i).at(2) << ")\n";
-	}
+    for (const auto& node : result) {
+        std::cout << "(" << node[0] << "," << node[1] << "," << node[2] << ")\n";
+    }
 }
 
 void Router::cleanUpAfterAllRoutes()
 {
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < length; j++) {
-			vector<int> current_node = { 0,i,j };
-			Cell current_Cell;
-			getCellFromNode(current_node, current_Cell);
-			if (current_Cell.getType() == SOURCE)
-				current_Cell.setType(OBSTACLE);
-			current_node = { 1,i,j };
-			getCellFromNode(current_node, current_Cell);
-			if (current_Cell.getType() == SOURCE)
-				current_Cell.setType(OBSTACLE);
-		}
-	}
+    for (size_t i = 0; i < grid->size(); i++) {
+        for (size_t j = 0; j < (*grid)[i].size(); j++) {
+            for (size_t k = 0; k < (*grid)[i][j].size(); k++) {
+                Cell& current_Cell = (*grid)[i][j][k];
+                if (current_Cell.getType() == SOURCE)
+                    current_Cell.setType(WIRE);
+            }
+        }
+    }
 }
 
-void Router::getCellFromNode(vector<int> node, Cell &cell)
-{
-	if (node[0] != 1 && node[0] != 0)
-		cell = Cell(OBSTACLE);
-	else if (node[0] >= grid.size() || node[2] >= grid[node[0]].size() || node[1] >= grid[node[0]][node[2]].size())
-		cell = Cell(OBSTACLE);
-	else
-		cell = grid[node[0]][node[2]][node[1]];
-}
-
-//int Router::calcHeuristicVal(vector<int> node1, vector<int> node2)
-//{
-//	if (node1.at(0) == node2.at(0)) {
-//		if (node1.at(0) == 0)
-//			return abs(node1.at(1) - node2.at(1)) + bendPenality * abs(node1.at(2) - node2.at(2));
-//		else
-//			return (bendPenality * abs(node1.at(1) - node2.at(1))) + abs(node1.at(2) - node2.at(2));
-//	}
-//	else {
-//		return abs(node1.at(1) - node2.at(1)) + abs(node1.at(2) - node2.at(2)) + viaPenality;
-//	}
-//}

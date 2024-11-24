@@ -7,36 +7,39 @@
 #include <vector>
 #include <stack>
 #include <queue>
-using namespace std;
 
 class Router
 {
 public:
-	bool route(Net net, vector<vector<vector<Cell>>> &grid, int bend, int via);
-	static void getCellFromNode(vector<int> node, Cell &cell);
-	static vector<vector<vector<Cell>>> grid;
+    bool route(Net net, std::vector<std::vector<std::vector<Cell>>>& grid, int bend, int via);
+    std::vector<std::vector<std::vector<Cell>>>* grid; // Pointer to grid
 
 private:
-	vector<int> findClosestSource(vector<int> target);
-	void retraceToTarget(vector<int> source);
-	void printResult();
-	void cleanUpAfterAllRoutes();
-	//int calcHeuristicVal(vector<int> node1, vector<int> node2);
+    std::vector<int> findClosestTarget(std::vector<int> target);
+    std::vector<std::vector<int>> getAdjacentNodes(const std::vector<int>& node);
+    int getMoveCost(const std::vector<int>& fromNode, const std::vector<int>& toNode);
+    bool isValidNode(const std::vector<int>& node) const;
+    void retraceToSource(std::vector<int> source);
+    void printResult();
+    void cleanUpAfterAllRoutes();
 
-	int bendPenality, viaPenality;
-	vector<vector<int>> result;
-	int length, width;
+    int bendPenality, viaPenality;
+    std::vector<std::vector<int>> result;
+    size_t length, width; // Changed to size_t
 };
 
-//Node Comparator for sorting
+// Node Comparator for sorting
 struct comp {
-	bool operator()(vector<int> node1, vector<int> node2) {
-		Cell a1;
-		Router::getCellFromNode(node1, a1);
-		Cell a2;
-		Router::getCellFromNode(node2, a2);
-		return a1 > a2;
-	}
+    Router* router; // Pointer to Router instance
+    comp(Router* r) : router(r) {}
+
+    bool operator()(const std::vector<int>& node1, const std::vector<int>& node2) const {
+        // Access the grid directly
+        const Cell& a1 = (*router->grid)[node1[0]][node1[1]][node1[2]];
+        const Cell& a2 = (*router->grid)[node2[0]][node2[1]][node2[2]];
+        return a1.getCost() > a2.getCost(); // Compare based on cost
+    }
 };
 
 #endif // !ROUTER
+

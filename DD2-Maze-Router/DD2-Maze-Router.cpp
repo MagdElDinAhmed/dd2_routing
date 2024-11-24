@@ -15,7 +15,7 @@ int main()
 	vector<Net> nets;
 	detailed_grid.resize(2);
 	int bend_penalty, via_penalty;
-	TextParser tp("test.txt");
+	TextParser tp("test_1.txt");
 	
 	// Read file
 	cout << tp.getFilename() << endl;
