@@ -5,16 +5,40 @@
 using namespace std;
 
 // Constructor
-Cell::Cell(cell_type type) : type(type), cost(INT32_MAX) {}
-
-Cell::Cell()
-{
-    type = OBSTACLE;
-}
+Cell::Cell(int x, int y, int z, cell_type type) : x(x), y(y), z(z), type(type), cost(INT32_MAX) {}
 
 // Destructor
 Cell::~Cell() {}
 
+// Getter for x
+int Cell::getX() const {
+	return x;
+}
+
+// Setter for x
+void Cell::setX(int x) {
+	this->x = x;
+}
+
+// Getter for y
+int Cell::getY() const {
+	return y;
+}
+
+// Setter for y
+void Cell::setY(int y) {
+	this->y = y;
+}
+
+// Getter for z
+int Cell::getZ() const {
+	return z;
+}
+
+// Setter for z
+void Cell::setZ(int z) {
+	this->z = z;
+}
 
 // Getter for cost
 int Cell::getCost() const {
