@@ -19,14 +19,16 @@ bool Router::route(Net& net, std::vector<std::vector<std::vector<Cell>>>& grid, 
     }
 
     // Loop over each pin, connecting it to the network
-    for (size_t i = 0; i < pins.size()-1; i++) {
+    for (size_t i = 0; i < pins.size(); i++) {
         const std::vector<int>& target = pins[i];
         Cell& source_cell = (*this->grid)[target[0]][target[2]][target[1]];
-        source_cell.setType(SOURCE);
-        std::vector<int> source = findClosestTarget(target);
-        if (source[0] == -1)
-            return false;
-        retraceToSource(source);
+        if (source_cell.getType() != SOURCE) {
+            source_cell.setType(SOURCE);
+            std::vector<int> source = findClosestTarget(target);
+            if (source[0] == -1)
+                return false;
+            retraceToSource(source);
+        }
     }
 
     // Print the result and cleanup
@@ -125,8 +127,8 @@ int Router::getMoveCost(const std::vector<int>& fromNode, const std::vector<int>
 
 bool Router::isValidNode(const std::vector<int>& node) const {
     return node[0] >= 0 && node[0] < grid->size() &&
-           node[1] >= 0 && node[1] < (*grid)[0].size() &&
-           node[2] >= 0 && node[2] < (*grid)[0][0].size();
+           node[2] >= 0 && node[2] < (*grid)[0].size() &&
+           node[1] >= 0 && node[1] < (*grid)[0][0].size();
 }
 
 void Router::retraceToSource(std::vector<int> source)
