@@ -33,8 +33,9 @@ During the process, we need to ensure data validity, so we check that:
 - No obstacle or pin is being placed in an occupied space
 
 For the first line specifically, we check that we only have 4 numbers.
-### Visualization
-2. **Visualization Components**:
+## Visualization
+---
+1. **Visualization Components**:
    - **Grid**:
      - Represented as a rectangular boundary.
      - Only the outer border of the grid is displayed to keep the visualization clean.
@@ -49,7 +50,7 @@ For the first line specifically, we check that we only have 4 numbers.
        - `net2`: Green
        - `net3`: Orange
 
-3. **Visualization Details**:
+2. **Visualization Details**:
    - **`matplotlib`**:
      - Used for static visualization of the grid and paths.
    - **Dynamic Coloring**:
@@ -61,7 +62,7 @@ For the first line specifically, we check that we only have 4 numbers.
        - **Metal Layer 1**: For paths and obstacles on layer 1.
        - **Metal Layer 2**: For paths and obstacles on layer 2.
 
-4. **Algorithm**:
+3. **Algorithm**:
    - The Lee Algorithm is used to calculate the shortest path connecting the pins of each net.
    - The paths account for:
      - Grid constraints (dimensions and obstacles).
