@@ -5,7 +5,7 @@
 using namespace std;
 
 // Constructor
-Cell::Cell(int x, int y, int z, cell_type type) : x(x), y(y), z(z), type(type), cost(INT32_MAX) {}
+Cell::Cell(int x, int y, int z, cell_type type) : x(x), y(y), z(z), type(type), cost(INT_MAX) {}
 
 // Destructor
 Cell::~Cell() {}

@@ -22,24 +22,26 @@ private:
     void retraceToSource(std::vector<int> source);
     void printResult();
     void cleanUpAfterAllRoutes();
+    vector<int> minDist(std::vector<std::vector<std::vector<bool>>> visited);
 
     int bendPenality, viaPenality;
     std::vector<std::vector<int>> result;
+    Net* net;
     size_t length, width; // Changed to size_t
 };
 
-// Node Comparator for sorting
-struct comp {
-    Router* router; // Pointer to Router instance
-    comp(Router* r) : router(r) {}
-
-    bool operator()(const std::vector<int>& node1, const std::vector<int>& node2) const {
-        // Access the grid directly
-        const Cell& a1 = (*router->grid)[node1[0]][node1[1]][node1[2]];
-        const Cell& a2 = (*router->grid)[node2[0]][node2[1]][node2[2]];
-        return a1.getCost() > a2.getCost(); // Compare based on cost
-    }
-};
+//// Node Comparator for sorting
+//struct comp {
+//    Router* router; // Pointer to Router instance
+//    comp(Router* r) : router(r) {}
+//
+//    bool operator()(const std::vector<int>& node1, const std::vector<int>& node2) const {
+//        // Access the grid directly
+//        const Cell& a1 = (*router->grid)[node1[0]][node1[1]][node1[2]];
+//        const Cell& a2 = (*router->grid)[node2[0]][node2[1]][node2[2]];
+//        return a1.getCost() > a2.getCost(); // Compare based on cost
+//    }
+//};
 
 #endif // !ROUTER
 

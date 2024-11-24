@@ -33,7 +33,10 @@ int main()
 
 	Router r;
 	for (int i = 0; i < nets.size(); i++) {
-		r.route(nets.at(i), detailed_grid, bend_penalty, via_penalty);
+		if (!r.route(nets.at(i), detailed_grid, bend_penalty, via_penalty)) {
+			cout << "FAILED TO ROUTE, NO ROUTES EXIST\n";
+			return 1;
+		}
 	}
 
 	// Open file for writing

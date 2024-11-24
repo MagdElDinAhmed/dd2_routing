@@ -44,7 +44,12 @@ vector<vector<int>> Net::getPath() {
 
 // Setter for path
 void Net::setPath(vector<vector<int>> path) {
-	this->path = path;
+	for (int i = 0; i < path.size(); i++) {
+		this->path.push_back(vector<int>());
+		for (int j = 0; j < path.at(i).size(); j++) {
+			this->path.at(i).push_back(path.at(i).at(j));
+		}
+	}
 }
 
 // Print pins
