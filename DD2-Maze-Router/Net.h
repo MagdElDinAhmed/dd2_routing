@@ -33,8 +33,15 @@ public:
 	// Print pins
 	void printPins();
 
+	// Getter for path
+	vector<vector<int>> getPath();
+
+	// Add path
+	void setPath(vector<vector<int>> path);
+
 private:
     int net_id;
     vector<vector<int>> pins;
+	vector<vector<int>> path;
 
 };

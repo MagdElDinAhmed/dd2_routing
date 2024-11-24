@@ -3,6 +3,10 @@ An implementation of Lee's maze algorithm in C++
 
 ## Implementation
 We utilized a 3D vector where the 1st dimension references the metal layer, the 2nd references the y value, and the 3rd references the x value.
+We mark all the pins as Targets, then loop over each of them checking if they are a Source or not. If not we mark them as a source and connect them to
+the nearest Target using an algorithm based of Dijkstra's algorithm. We trace back from the target to source marking the road as source wires as well.
+We repeat this process for each net printing the results of each net after we are done with it and marking all the used pins and wires in the connection
+as obstacles for future nets.
 ## Compilation
 ### Classes
 #### CellType
@@ -16,7 +20,7 @@ It is an enum indicating if a cell is:
 
 The last 2 are used specifically during the routing stage and are converted to pins and wires afterwards
 #### Cell
-It contains a cost and its cell type. It's functions are setters and getters. This is used to identify occupancy and cost during the routing process and cost is initialized to `INT32_MAX` and reset to `INT32_MAX` after each net route.
+It contains a cost and its cell type. It's functions are setters and getters. This is used to identify occupancy and cost during the routing process and cost is initialized to `INT_MAX` and reset to `INT_MAX` after each net route.
 #### Net
 It contains a net id and a vector containing the coordinates of the various pins in that net. Its functions are setters and getters. Additionally, you can add pins individually to the net and display all pins in the net.
 #### TextParser
@@ -106,6 +110,6 @@ Work was initially split as global routing, detailed routing, and visualization.
 #### Challenges
 - Ensuring errors in the text file are accounted for such that the program doesn't crash or produce errors
 ### Tarek Kassab
-
+- Implemented the routing algorithm based off data provided by Magd's Code
 ### Yousef Mansour
 - Visulaization

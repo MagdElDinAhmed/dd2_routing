@@ -37,6 +37,21 @@ void Net::addPin(vector<int> pin) {
 	pins.push_back(pin);
 }
 
+// Getter for path
+vector<vector<int>> Net::getPath() {
+	return path;
+}
+
+// Setter for path
+void Net::setPath(vector<vector<int>> path) {
+	for (int i = 0; i < path.size(); i++) {
+		this->path.push_back(vector<int>());
+		for (int j = 0; j < path.at(i).size(); j++) {
+			this->path.at(i).push_back(path.at(i).at(j));
+		}
+	}
+}
+
 // Print pins
 void Net::printPins() {
 	for (int i = 0; i < pins.size(); i++) {

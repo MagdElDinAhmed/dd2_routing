@@ -235,7 +235,7 @@ bool TextParser::readFile(int& bend_penalty, int& via_penalty, vector<vector<vec
                 for (int y = 0; y < first_line_numbers[1]; y++) {
                     detailed_grid[z].push_back(vector<Cell>());
                     for (int x = 0; x < first_line_numbers[0]; x++) {
-                        detailed_grid[z][y].push_back(Cell(EMPTY));
+                        detailed_grid[z][y].push_back(Cell(x,y,z,EMPTY));
                     }
                 }
             }

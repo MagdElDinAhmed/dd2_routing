@@ -15,7 +15,7 @@ int main()
 	vector<Net> nets;
 	detailed_grid.resize(2);
 	int bend_penalty, via_penalty;
-	TextParser tp("test.txt");
+	TextParser tp("test_1.txt");
 	
 	// Read file
 	cout << tp.getFilename() << endl;
@@ -31,6 +31,33 @@ int main()
 		cout << "Failed to read file" << endl;
 	}
 
+	Router r;
+	for (int i = 0; i < nets.size(); i++) {
+		if (!r.route(nets.at(i), detailed_grid, bend_penalty, via_penalty)) {
+			cout << "FAILED TO ROUTE, NO ROUTES EXIST\n";
+			return 1;
+		}
+	}
+
+	// Open file for writing
+	ofstream outfile("routed_nets.txt");
+	if (!outfile.is_open()) {
+		cerr << "Failed to open file for writing" << endl;
+		return 1;
+	}
+
+	// Print the path for each net to the file
+	for (Net& net : nets) {
+		outfile << "net" << net.getNetId();
+		const auto& path = net.getPath();
+		for (const auto& node : path) {
+			outfile << " (" << node[0] << "," << node[1] << "," << node[2] << ")";
+		}
+		outfile << endl;
+	}
+
+	// Close the file
+	outfile.close();
 	
 	return 0;
 }

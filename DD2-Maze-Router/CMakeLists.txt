@@ -13,7 +13,7 @@ add_executable(DD2-Maze-Router
     TextParser.cpp
     Net.cpp
     Cell.cpp
-)
+    Router.cpp)
 
 # Include directories
 target_include_directories(DD2-Maze-Router PUBLIC "${PROJECT_SOURCE_DIR}")
