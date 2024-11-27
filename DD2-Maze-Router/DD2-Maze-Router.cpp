@@ -15,7 +15,7 @@ int main()
 	vector<Net> nets;
 	detailed_grid.resize(2);
 	int bend_penalty, via_penalty;
-	TextParser tp("test_1.txt");
+	TextParser tp("input.txt");
 	
 	// Read file
 	cout << tp.getFilename() << endl;
@@ -40,7 +40,7 @@ int main()
 	}
 
 	// Open file for writing
-	ofstream outfile("routed_nets.txt");
+	ofstream outfile("output.txt");
 	if (!outfile.is_open()) {
 		cerr << "Failed to open file for writing" << endl;
 		return 1;
@@ -51,7 +51,8 @@ int main()
 		outfile << "net" << net.getNetId();
 		const auto& path = net.getPath();
 		for (const auto& node : path) {
-			outfile << " (" << node[0] << "," << node[1] << "," << node[2] << ")";
+			int layer = node[0] + 1;
+			outfile << " (" << layer << "," << node[1] << "," << node[2] << ")";
 		}
 		outfile << endl;
 	}
