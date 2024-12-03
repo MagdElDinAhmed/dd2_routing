@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "Net.h"
 #include "Cell.h"
 #include "CellType.h"

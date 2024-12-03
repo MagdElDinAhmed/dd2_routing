@@ -31,6 +31,11 @@ int main()
 		cout << "Failed to read file" << endl;
 	}
 
+	// Sort nets based on the number of pins
+	sort(nets.begin(), nets.end(), [](Net& a, Net& b) {
+		return a.getPins().size() < b.getPins().size();
+	});
+
 	Router r;
 	for (int i = 0; i < nets.size(); i++) {
 		if (!r.route(nets.at(i), detailed_grid, bend_penalty, via_penalty)) {
