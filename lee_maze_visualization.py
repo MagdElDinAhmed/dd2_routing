@@ -1,4 +1,8 @@
+import random
+import colorsys
+
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 # function to read a file
 def read_file(file_path):
@@ -41,36 +45,49 @@ def parse_paths(output_data):
         paths[net_name] = path
     return paths
     
-    
 # function to draw the grid
-def draw_detailed_grid(ax, grid_width, grid_height, layer, obstructions, nets, paths, title, colors):
+def draw_merged_grid(ax, grid_width, grid_height, obstructions, nets, paths, title, colors):
     # Draw outer border of the grid
     ax.plot([0, grid_width, grid_width, 0, 0], [0, 0, grid_height, grid_height, 0], 'k-', lw=0.3)
     
     # mark obstructions
-    for (obs_layer, x, y), color in obstructions.items():
-        if obs_layer == layer:
-            ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, color=color))
+    for (layer, x, y), color in obstructions.items():
+        ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, color=color))
     
     # mark nets
     for net, pins in nets.items():
         net_color = colors[net]
-        for pin_layer, x, y in pins:
-            if pin_layer == layer:
-                ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, color=net_color))
+        for layer, x, y in pins:
+            hatch = '//' if layer == 1 else '\\\\'
+            ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, color=net_color, hatch=hatch))
     
-    # mark paths with distinct colors
+    # mark paths with distinct colors and layer-specific opacity
     for net_name, path in paths.items():
         path_color = colors[net_name]
-        for point_layer, x, y in path:
-            if point_layer == layer:
-                ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, color=path_color))
+        for layer, x, y in path:
+            # Make layer 1 more transparent than layer 2
+            opacity = 0.4 if layer == 1 else 0.8
+            hatch = '//' if layer == 1 else '\\\\'
+            ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, 
+                                     facecolor=path_color, 
+                                     alpha=opacity,
+                                     hatch=hatch))
+    
+    # mark vias
+    for net_name, path in paths.items():
+        for i in range(1, len(path)):
+            if path[i][0] != path[i-1][0]:  # different layers
+                x, y = path[i][1], path[i][2]
+                ax.add_patch(patches.Circle((x - 0.5, y - 0.5), 0.2, color='red'))
+    
+    # Add grid lines
+    ax.set_xticks(range(grid_width + 1))
+    ax.set_yticks(range(grid_height + 1))
+    ax.grid(which='both', color='grey', linestyle='-', linewidth=0.5)
     
     # Adjust settings
     ax.set_xlim(0, grid_width)
     ax.set_ylim(0, grid_height)
-    ax.set_xticks([])
-    ax.set_yticks([])
     ax.set_aspect('equal')
     ax.set_title(title, fontsize=10, pad=10)
     
@@ -85,16 +102,23 @@ output_data = read_file(output_file)
 grid_width, grid_height, obstructions, nets = parse_input(input_data)
 paths = parse_paths(output_data)
 
-colors = {
-    "net1": "purple",
-    "net2": "green",
-    "net3": "orange"
-}
+# Generate a random color
+def random_color():
+    h, s, l = random.random(), 0.5 + random.random() / 2, 0.4 + random.random() / 5
+    r, g, b = [int(256 * i) for i in colorsys.hls_to_rgb(h, l, s)]
+    return "#{:02x}{:02x}{:02x}".format(r, g, b)
 
-fig, axs = plt.subplots(1, 2, figsize=(18, 9))
+# Assign a unique color to each net dynamically
+colors = {net: random_color() for net in nets}
+# Create a legend for the nets
+legend_patches = [patches.Patch(color=color, label=net) for net, color in colors.items()]
 
-draw_detailed_grid(axs[0], grid_width, grid_height, 1, obstructions, nets, paths, "Metal Layer 1", colors)
-draw_detailed_grid(axs[1], grid_width, grid_height, 2, obstructions, nets, paths, "Metal Layer 2", colors)
+
+fig, ax = plt.subplots(figsize=(9, 9))
+
+ax.legend(handles=legend_patches, loc='upper right', fontsize='small', title='Nets')
+
+draw_merged_grid(ax, grid_width, grid_height, obstructions, nets, paths, "Merged Metal Layers", colors)
 
 plt.tight_layout()
 plt.show()
