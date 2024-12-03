@@ -58,7 +58,7 @@ def draw_merged_grid(ax, grid_width, grid_height, obstructions, nets, paths, tit
     for net, pins in nets.items():
         net_color = colors[net]
         for layer, x, y in pins:
-            hatch = '//' if layer == 1 else '\\\\'
+            hatch = 'x' if layer == 1 else 'o'
             ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, color=net_color, hatch=hatch))
     
     # mark paths with distinct colors and layer-specific opacity
@@ -67,7 +67,7 @@ def draw_merged_grid(ax, grid_width, grid_height, obstructions, nets, paths, tit
         for layer, x, y in path:
             # Make layer 1 more transparent than layer 2
             opacity = 0.4 if layer == 1 else 0.8
-            hatch = '//' if layer == 1 else '\\\\'
+            hatch = 'x' if layer == 1 else 'o'
             ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, 
                                      facecolor=path_color, 
                                      alpha=opacity,
