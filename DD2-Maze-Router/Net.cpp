@@ -61,3 +61,31 @@ void Net::printPins() {
 		cout << endl;
 	}
 }
+
+// Getter for path cost
+int Net::getPathCost() {
+	return path_cost;
+}
+
+// Setter for path cost
+void Net::setPathCost() {
+	path_cost = 0;
+	for (int i = 0; i < path.size() - 1; i++) {
+		path_cost += abs(path[i][0] - path[i + 1][0]) + abs(path[i][1] - path[i + 1][1]) + abs(path[i][2] - path[i + 1][2]);
+	}
+}
+
+// Getter for via count
+int Net::getViaCount() {
+	return via_count;
+}
+
+// Setter for via count
+void Net::setViaCount() {
+	via_count = 0;
+	for (int i = 0; i < path.size() - 1; i++) {
+		if (path[i][0] != path[i + 1][0]) {
+			via_count++;
+		}
+	}
+}
