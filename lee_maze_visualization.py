@@ -23,7 +23,7 @@ def parse_input(input_data):
         line = line.strip()
         if line.startswith("OBS"):
             layer, x, y = map(int, line[line.index("(") + 1:line.index(")")].split(","))
-            obstructions[(layer, x, y)] = "black"
+            obstructions[(layer, x, y)] = "gray"
         elif line.startswith("net"):
             parts = line.split(" ", 1)  # split into net name and rest of the line
             net_name = parts[0]
@@ -50,9 +50,14 @@ def draw_merged_grid(ax, grid_width, grid_height, obstructions, nets, paths, tit
     # Draw outer border of the grid
     ax.plot([0, grid_width, grid_width, 0, 0], [0, 0, grid_height, grid_height, 0], 'k-', lw=0.3)
     
-    # mark obstructions
+    # Mark obstructions
     for (layer, x, y), color in obstructions.items():
-        ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, color=color))
+        if layer == 1:
+            # Create a black rectangle with white circular patterns (hatch 'o')
+            ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, facecolor='gray', hatch='o', edgecolor='black', linewidth=0.3))
+        else:
+            # Default style for other layers
+            ax.add_patch(plt.Rectangle((x - 1, y - 1), 1, 1, facecolor=color))
     
     # mark nets
     for net, pins in nets.items():
