@@ -63,6 +63,38 @@ int main()
 		}
 	}
 
+	// Set the lengths of the paths and count the number of vias
+	for (Net& net : nets) {
+		net.setPathCost();
+		net.setViaCount();
+	}
+
+	// Display the longest route
+	int longest_route = 0;
+	for (Net& net : nets) {
+		if (net.getPath().size() > longest_route) {
+			longest_route = net.getPath().size();
+		}
+	}
+
+	cout << "Longest route: " << longest_route << endl;
+
+	// Get total wire length
+	int total_wire_length = 0;
+	for (Net& net : nets) {
+		total_wire_length += net.getPathCost();
+	}
+
+	cout << "Total wire length: " << total_wire_length << endl;
+
+	// Get total number of vias
+	int total_vias = 0;
+	for (Net& net : nets) {
+		total_vias += net.getViaCount();
+	}
+
+	cout << "Total vias: " << total_vias << endl;
+
 	// Open file for writing
 	ofstream outfile2("output.txt");
 	if (!outfile2.is_open()) {

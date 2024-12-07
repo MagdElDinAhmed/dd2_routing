@@ -39,9 +39,23 @@ public:
 	// Add path
 	void setPath(vector<vector<int>> path);
 
+	// Getter for path cost
+	int getPathCost();
+
+	// Setter for path cost
+	void setPathCost();
+
+	// Getter for via count
+	int getViaCount();
+
+	// Setter for via count
+	void setViaCount();
+
 private:
     int net_id;
     vector<vector<int>> pins;
 	vector<vector<int>> path;
+	int path_cost;
+	int via_count;
 
 };
