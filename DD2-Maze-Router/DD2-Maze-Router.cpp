@@ -150,6 +150,8 @@ int main()
 		return 1;
 	}
 
+	
+
 	// Print the path for each net to the file
 	for (Net& net : nets) {
 		outfile2 << "net" << net.getNetId();
@@ -162,7 +164,6 @@ int main()
 	}
 
 	// Close the file
-	outfile.close();
 	outfile2.close();
 	
 	return 0;
