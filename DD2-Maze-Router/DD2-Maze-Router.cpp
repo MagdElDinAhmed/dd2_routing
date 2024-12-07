@@ -8,6 +8,49 @@
 
 using namespace std;
 
+// Function to calculate Euclidean distance between two points
+double calculateEuclideanDistance(const vector<int>& a, const vector<int>& b) {
+	return sqrt(pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2) + pow(a[2] - b[2], 2));
+}
+
+// Function to find the minimum total Euclidean distance to connect all pins in a net using Prim's algorithm
+double findMinTotalEuclideanDistance(const Net& net) {
+	const auto& pins = net.getPins();
+	int n = pins.size();
+	if (n == 0) return 0.0;
+
+	vector<double> minDist(n, numeric_limits<double>::max());
+	vector<bool> inMST(n, false);
+	minDist[0] = 0.0;
+	double totalDistance = 0.0;
+
+	for (int i = 0; i < n; ++i) {
+		// Find the vertex with the minimum distance that is not yet included in MST
+		int u = -1;
+		for (int j = 0; j < n; ++j) {
+			if (!inMST[j] && (u == -1 || minDist[j] < minDist[u])) {
+				u = j;
+			}
+		}
+
+		// Include the vertex in MST
+		inMST[u] = true;
+		totalDistance += minDist[u];
+
+		// Update the distances of adjacent vertices
+		for (int v = 0; v < n; ++v) {
+			if (!inMST[v]) {
+				double dist = calculateEuclideanDistance(pins[u], pins[v]);
+				if (dist < minDist[v]) {
+					minDist[v] = dist;
+				}
+			}
+		}
+	}
+
+	return totalDistance;
+}
+
 int main()
 {
 	// Initialize variables
@@ -54,6 +97,11 @@ int main()
 	{
 		cout << "Failed to read file" << endl;
 	}
+
+	// Sort nets based on the minimum total Euclidean distance to connect all pins
+	sort(nets.begin(), nets.end(), [](const Net& a, const Net& b) {
+		return findMinTotalEuclideanDistance(a) < findMinTotalEuclideanDistance(b);
+	});
 
 	Router r;
 	for (int i = 0; i < nets.size(); i++) {
