@@ -90,7 +90,7 @@ Place the input file in the exe folder then build and run `DD2-Maze-Router.cpp` 
 
 3. **Output**:
    - A graphical visualization of the grid with obstacles, pins, and calculated paths.
-
+  
 ---
 
 #### **Key Features**
@@ -100,6 +100,96 @@ Place the input file in the exe folder then build and run `DD2-Maze-Router.cpp` 
   - Each net's path is displayed in a distinct color for better differentiation.
 - **Multi-Layer Support**:
   - Obstructions, pins, and paths are visualized separately for each metal layer.
+
+---
+
+### **Tests**
+test 1:
+
+- 25x25 grid
+- No additional penalties for using vias or going against the preferred path
+- No obstacles
+- 3 nets, each having 2 pins, and all pins are on layer 0
+
+test 2:
+
+- 25x25 grid
+- No additional penalties for using vias or going against the preferred path
+- Obstacles are present on the direct path between the pins
+- 3 nets, each having 2 pins, and the 2 pins are either on the same x value or the same y value
+- 1 of the nets has both pins on the same layer
+- 2 nets have the pins on different layers
+
+test 3:
+
+- 25x50 grid
+- Penalty for using a via is 5
+- Penalty for going against the preferred path is 3
+- Obstacles are present. Some are expensive enough to make using a via more effective for one net. Others make the router choose to go against the preferred path for another.
+- 2 nets, each having 2 pins, and the pins of each net are on the same metal layer
+
+test 4:
+
+- 25x50 grid
+- Penalty for using a via is 3
+- Penalty for going against the preferred path is 5
+- Obstacles are present. Some are expensive enough to make using a via more effective for one net. Others make the router choose to go against the preferred path for another.
+- 2 nets, each having 2 pins, and the pins of each net are on the same metal layer
+
+test 5:
+
+- 25x50 grid
+- Penalty for using a via is 5
+- Penalty for going against the preferred path is 3
+- No obstacles. The wires of one net will become the obstacles for another
+- 2 nets, each having 2 pins, and the pins are on the same metal layer
+
+test 6:
+
+- 50x25 grid
+- No additional penalties for using vias or going against the preferred path
+- No obstacles
+- 1 net with 4 pins, 2 of the pins are on one layer and the other 2 are on the other
+
+test 7:
+
+- 25x25 grid
+- Penalty for using a via is 10
+- Penalty for going against the preferred path is 4
+- Obstacles completely surround a pin
+- 1 net with 2 pins on the same layer
+
+test 8:
+- 50x50 grid
+- Penalty for using a via is 20
+- Penalty for going against the preferred path is 10
+- No obstacles
+- 1 net having 3 pins, and the pins are on the same layer with a fork in the road
+
+(BONUS)
+test 9:
+
+- 25x25 grid
+- Penalty for using a via is 10
+- Penalty for going against the preferred path is 4
+- No obstacles.
+- Have net1 have 6 pins, net2 have 5 pins, net3 have 4 pins, net4 have 3 pins, net5 have 2 pins to test ordering (all pins on the same layer)
+
+test 10:
+
+- 25x25 grid
+- Penalty for using a via is 10
+- Penalty for going against the preferred path is 4
+- No obstacles.
+- 5 nets with 3 pins each to test ordering on equal pin counts
+
+test 11:
+
+- 25x25 grid
+- Penalty for using a via is 10
+- Penalty for going against the preferred path is 4
+- No obstacles.
+- Have net1 have 6 pins, net2 have 5 pins, net3 have 4 pins, net4 have 3 pins, net5 have 2 pins to test ordering (have pins on different layers)
 
 ---
 ## Team Workflow
