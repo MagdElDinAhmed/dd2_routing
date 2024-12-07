@@ -78,7 +78,8 @@ Change the name of the file into `test_<number>` then build and run `DD2-Maze-Ro
 
 #### **How to Use**
 1. **Input Files**:
-   - Place `input.txt` and `output.txt` in the project directory.
+   - Place the input file in the project directory.
+   - Type the name of the file in the program when prompted
    - Ensure the input format matches the expected structure.
 
 2. **Run the Script**:
