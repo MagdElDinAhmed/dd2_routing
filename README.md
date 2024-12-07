@@ -110,6 +110,9 @@ Work was initially split as global routing, detailed routing, and visualization.
 - Wrote the initial code for the classes used
 - Initial set up of the nets, obstacles, and the grid itself
 - Aided in the routing algorithm development
+- Aided in visualization development
+- Developed the test cases
+- Worked on Net Ordering Heuristic
 #### Challenges
 - Ensuring errors in the text file are accounted for such that the program doesn't crash or produce errors
 ### Tarek Kassab
