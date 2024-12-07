@@ -152,17 +152,18 @@ int main()
 
 	// Print the path for each net to the file
 	for (Net& net : nets) {
-		outfile << "net" << net.getNetId();
+		outfile2 << "net" << net.getNetId();
 		const auto& path = net.getPath();
 		for (const auto& node : path) {
 			int layer = node[0] + 1;
-			outfile << " (" << layer << "," << node[1] << "," << node[2] << ")";
+			outfile2 << " (" << layer << "," << node[1] << "," << node[2] << ")";
 		}
-		outfile << endl;
+		outfile2 << endl;
 	}
 
 	// Close the file
 	outfile.close();
+	outfile2.close();
 	
 	return 0;
 }
