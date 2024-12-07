@@ -14,7 +14,7 @@ double calculateEuclideanDistance(const vector<int>& a, const vector<int>& b) {
 }
 
 // Function to find the minimum total Euclidean distance to connect all pins in a net using Prim's algorithm
-double findMinTotalEuclideanDistance(const Net& net) {
+double findMinTotalEuclideanDistance(Net& net) {
 	const auto& pins = net.getPins();
 	int n = pins.size();
 	if (n == 0) return 0.0;
@@ -99,7 +99,7 @@ int main()
 	}
 
 	// Sort nets based on the minimum total Euclidean distance to connect all pins
-	sort(nets.begin(), nets.end(), [](const Net& a, const Net& b) {
+	sort(nets.begin(), nets.end(), [](Net& a, Net& b) {
 		return findMinTotalEuclideanDistance(a) < findMinTotalEuclideanDistance(b);
 	});
 
