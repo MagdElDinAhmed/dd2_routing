@@ -15,6 +15,30 @@ int main()
 	vector<Net> nets;
 	detailed_grid.resize(2);
 	int bend_penalty, via_penalty;
+
+	// Take the name of the file as input
+	string input_filename;
+	cout << "Enter the name of the input file: ";
+	cin >> input_filename;
+
+	// Copy the contents of the input file to input.txt
+	ifstream infile(input_filename);
+	ofstream outfile("input.txt");
+
+	if (!infile.is_open()) {
+		cerr << "Failed to open input file" << endl;
+		return 1;
+	}
+
+	if (!outfile.is_open()) {
+		cerr << "Failed to open output file" << endl;
+		return 1;
+	}
+
+	outfile << infile.rdbuf();
+
+	infile.close();
+	outfile.close();
 	TextParser tp("input.txt");
 	
 	// Read file
@@ -40,8 +64,8 @@ int main()
 	}
 
 	// Open file for writing
-	ofstream outfile("output.txt");
-	if (!outfile.is_open()) {
+	ofstream outfile2("output.txt");
+	if (!outfile2.is_open()) {
 		cerr << "Failed to open file for writing" << endl;
 		return 1;
 	}
