@@ -18,16 +18,24 @@ bool Router::route(Net& net, std::vector<std::vector<std::vector<Cell>>>& grid, 
         currentCell.setType(TARGET);
     }
 
+    //If there is only one pin set it as source and add it to the list
+    if (pins.size() >= 1) {
+        const std::vector<int>& sourceStart = pins[0];
+        Cell& source_cell = (*this->grid)[sourceStart[0]][sourceStart[2]][sourceStart[1]];
+        source_cell.setType(SOURCE);
+        result.insert(result.begin(), sourceStart);
+    }
     // Loop over each pin, connecting it to the network
-    for (size_t i = 0; i < pins.size(); i++) {
+    for (size_t i = 1; i < pins.size(); i++) {
         const std::vector<int>& target = pins[i];
         Cell& source_cell = (*this->grid)[target[0]][target[2]][target[1]];
         if (source_cell.getType() != SOURCE) {
-            source_cell.setType(SOURCE);
-            std::vector<int> source = findClosestTarget(target);
+            std::vector<int> source = findClosestSource(target);
             if (source[0] == -1)
                 return false;
-            retraceToSource(source);
+            if (!retraceToTarget(source))
+                return false;
+            cleanUpAfterOneRoute();
         }
     }
 
@@ -37,13 +45,8 @@ bool Router::route(Net& net, std::vector<std::vector<std::vector<Cell>>>& grid, 
     return true;
 }
 
-std::vector<int> Router::findClosestTarget(std::vector<int> target)
-{
-    // Pass 'this' to the comparator
-    //std::priority_queue<std::vector<int>, std::vector<std::vector<int>>, comp> nodeQueue(comp(this));
+std::vector<int> Router::findClosestSource(std::vector<int> target){
     std::vector<std::vector<std::vector<bool>>> visited(2, std::vector<std::vector<bool>>(width, std::vector<bool>(length, false)));
-    //nodeQueue.push(target);
-    //visited[target[0]][target[2]][target[1]] = true;
     (*this->grid)[target[0]][target[2]][target[1]].setCost(0);
     int vertices = 2 * width * length;
     for(int counter = 0; counter < vertices; counter++) {
@@ -56,7 +59,7 @@ std::vector<int> Router::findClosestTarget(std::vector<int> target)
         for (const auto& adj_node : adj_nodes) {
             if (isValidNode(adj_node)) {
                 Cell& adj_cell = (*this->grid)[adj_node[0]][adj_node[2]][adj_node[1]];
-                int cost = currentCell.getCost() + getMoveCost(currentNode, adj_node);
+                int cost = (currentCell.getCost() == INT_MAX) ? INT_MAX : currentCell.getCost() + getMoveCost(currentNode, adj_node);
 
                 if (!visited[adj_node[0]][adj_node[2]][adj_node[1]] &&
                     adj_cell.getCost() > cost && adj_cell.getType() != OBSTACLE) {
@@ -71,7 +74,7 @@ std::vector<int> Router::findClosestTarget(std::vector<int> target)
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < length; j++) {
             for (int z = 0; z < 2; z++) {
-                if ((*this->grid)[z][i][j].getCost() < min_cost && (*this->grid)[z][i][j].getType() == TARGET) {
+                if ((*this->grid)[z][i][j].getCost() < min_cost && (*this->grid)[z][i][j].getType() == SOURCE) {
                     min_cost = (*this->grid)[z][i][j].getCost();
                     min_node = { z,j,i };
                 }
@@ -131,12 +134,11 @@ bool Router::isValidNode(const std::vector<int>& node) const {
            node[1] >= 0 && node[1] < (*grid)[0][0].size();
 }
 
-void Router::retraceToSource(std::vector<int> source)
+bool Router::retraceToTarget(std::vector<int> source)
 {
     std::vector<int> currentNode = source;
     Cell& currentCell = (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]];
-    while (currentCell.getType() != SOURCE) {
-        result.insert(result.begin(),currentNode);
+    while (currentCell.getType() != TARGET) {
         currentCell.setType(SOURCE);
 
         std::vector<std::vector<int>> adj_nodes = getAdjacentNodes(currentNode);
@@ -155,15 +157,16 @@ void Router::retraceToSource(std::vector<int> source)
 
         if (selected == currentNode) {
             cout << "ERROR RETRACING STEPS, NO ROUTE EXIST\n";
-            break;
+            return false;
         }
         else {
             currentNode = selected;
             currentCell = (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]];
+            result.insert(result.begin(), currentNode);
         }
     }
-    result.insert(result.begin(), currentNode);
     (*this->grid)[currentNode[0]][currentNode[2]][currentNode[1]].setType(SOURCE);
+    return true;
 }
 
 void Router::printResult()
@@ -185,6 +188,18 @@ void Router::cleanUpAfterAllRoutes()
                 current_Cell.setCost(INT_MAX);
                 if (current_Cell.getType() == SOURCE)
                     current_Cell.setType(OBSTACLE);
+            }
+        }
+    }
+}
+
+void Router::cleanUpAfterOneRoute()
+{
+    for (size_t i = 0; i < grid->size(); i++) {
+        for (size_t j = 0; j < (*grid)[i].size(); j++) {
+            for (size_t k = 0; k < (*grid)[i][j].size(); k++) {
+                Cell& current_Cell = (*grid)[i][j][k];
+                current_Cell.setCost(INT_MAX);
             }
         }
     }

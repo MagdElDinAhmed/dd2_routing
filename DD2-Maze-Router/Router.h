@@ -15,13 +15,14 @@ public:
     std::vector<std::vector<std::vector<Cell>>>* grid; // Pointer to grid
 
 private:
-    std::vector<int> findClosestTarget(std::vector<int> target);
+    std::vector<int> findClosestSource(std::vector<int> target);
     std::vector<std::vector<int>> getAdjacentNodes(const std::vector<int>& node);
     int getMoveCost(const std::vector<int>& fromNode, const std::vector<int>& toNode);
     bool isValidNode(const std::vector<int>& node) const;
-    void retraceToSource(std::vector<int> source);
+    bool retraceToTarget(std::vector<int> source);
     void printResult();
     void cleanUpAfterAllRoutes();
+    void cleanUpAfterOneRoute();
     vector<int> minDist(std::vector<std::vector<std::vector<bool>>> visited);
 
     int bendPenality, viaPenality;
