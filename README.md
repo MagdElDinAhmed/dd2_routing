@@ -38,7 +38,7 @@ During the process, we need to ensure data validity, so we check that:
 
 For the first line specifically, we check that we only have 4 numbers.
 ### How to run
-Change the name of the file into `test_<number>` then build and run `DD2-Maze-Router.cpp`.
+Place the input file in the exe folder then build and run `DD2-Maze-Router.cpp` and type the name of the input file when prompted.
 ## Visualization
 
 1. **Visualization Components**:
@@ -78,7 +78,7 @@ Change the name of the file into `test_<number>` then build and run `DD2-Maze-Ro
 
 #### **How to Use**
 1. **Input Files**:
-   - Place the input file in the project directory.
+   - Place `input.txt` and `output.txt` in the project directory.
    - Type the name of the file in the program when prompted
    - Ensure the input format matches the expected structure.
 
