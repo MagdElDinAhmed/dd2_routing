@@ -37,11 +37,53 @@ During the process, we need to ensure data validity, so we check that:
 - No obstacle or pin is being placed in an occupied space
 
 For the first line specifically, we check that we only have 4 numbers.
-### How to run
-Place the input file in the exe folder then build and run `DD2-Maze-Router.cpp` and type the name of the input file when prompted.
-# Grid Visualization Tool
+# How to run
+## Linux Operating System
 
-## Visulalization
+Follow these steps to set up, build, and run the project on Ubuntu:
+
+### Prerequisites
+
+Ensure you have the required tools installed. Run:
+```bash
+sudo apt install cmake build-essential
+```
+
+### Steps to Build and Run
+
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   ```
+   Replace `<repository-url>` with the actual URL of the repository.
+
+2. **Create a Build Directory**:
+   ```bash
+   mkdir build
+   cd build
+   ```
+
+3. **Generate Build Files with CMake**:
+   ```bash
+   cmake ..
+   ```
+
+4. **Build the Project**:
+   ```bash
+   make
+   ```
+
+5. **Run the Executable**:
+   ```bash
+   ./DD2-Maze-Router
+   ```
+---
+
+## Windows Operating System
+- make the project
+- Place the input file in the exe folder then build and run `DD2-Maze-Router.cpp` and type the name of the input file when prompted.
+
+# Grid Visualization Tool
 
 This script ```lee_maze_visualization.py``` visualizes routing grids for EDA tasks, including obstructions, nets, and routed paths. It dynamically colors nets and supports multiple layers with distinct visual styles.
 
