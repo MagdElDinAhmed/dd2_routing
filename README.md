@@ -39,67 +39,76 @@ During the process, we need to ensure data validity, so we check that:
 For the first line specifically, we check that we only have 4 numbers.
 ### How to run
 Place the input file in the exe folder then build and run `DD2-Maze-Router.cpp` and type the name of the input file when prompted.
-## Visualization
+# Grid Visualization Tool
 
-1. **Visualization Components**:
-   - **Grid**:
-     - Represented as a rectangular boundary.
-     - Only the outer border of the grid is displayed to keep the visualization clean.
-   - **Obstructions**:
-     - Shown as **black cells** on the grid, indicating areas that cannot be used.
-   - **Pins**:
-     - Represented by **red cells** where each net begins or ends.
-   - **Paths**:
-     - Calculated by the Lee Algorithm and visualized using distinct colors for each net.
-     - Example Colors:
-       - `net1`: Blue
-       - `net2`: Green
-       - `net3`: Orange
+## Visulalization
 
-2. **Visualization Details**:
-   - **`matplotlib`**:
-     - Used for static visualization of the grid and paths.
-   - **Dynamic Coloring**:
-     - Paths are color-coded to differentiate between nets.
-   - **Aspect Ratio**:
-     - The grid is displayed with an equal aspect ratio to ensure cells appear square.
-   - **Annotations**:
-     - The visualization is divided into two grids:
-       - **Metal Layer 1**: For paths and obstacles on layer 1.
-       - **Metal Layer 2**: For paths and obstacles on layer 2.
+This script ```lee_maze_visualization.py``` visualizes routing grids for EDA tasks, including obstructions, nets, and routed paths. It dynamically colors nets and supports multiple layers with distinct visual styles.
 
-3. **Algorithm**:
-   - The Lee Algorithm is used to calculate the shortest path connecting the pins of each net.
-   - The paths account for:
-     - Grid constraints (dimensions and obstacles).
-     - Layer transitions for multi-layer paths.
+### Features
+
+- Parses **input** (grid, obstructions, nets) and **output** (paths) files.
+- Displays grid with **obstructions**, **net pins**, **routed paths**, and **vias**.
+- Assigns random **unique colors** to nets with a legend.
+
+### Requirements
+
+- **Python 3.6+**
+- **matplotlib**
+
+### Input File Format
+
+1. **Grid Information**: `<grid_width>, <grid_height>, <bend_penalty>, <via_penalty>`
+2. **Obstructions**: `OBS (<layer>, <x>, <y>)`
+3. **Nets**: `<net_name> (<layer>, <x>, <y>) (<layer>, <x>, <y>)`
+
+#### Example
+```
+25, 50, 3, 5
+OBS (0, 15, 27)
+net1 (0, 10, 30) (0, 20, 30)
+```
+
+### Output File Format
+
+Each net’s path:
+```
+<net_name> (<layer>, <x>, <y>) (<layer>, <x>, <y>) ...
+```
+
+#### Example
+```
+net1 (1,20,30) (1,19,30)
+```
+
+### How to Use
+
+1. Set file paths:
+   ```python
+   input_file = "Test Sets/Test_6/input.txt"
+   output_file = "Test Sets/Test_6/output.txt"
+   ```
+2. Run the script:
+   ```bash
+   python script_name.py
+   ```
+3. View the generated plots:
+   - **Figure 1**: Routed paths.
+   - **Figure 2**: Pins shifted to another layer for comparison.
+
+### Customization
+
+- Modify colors in `random_color()`.
+- Adjust grid styles in `draw_merged_grid()`.
+
+### Example Outputs
+
+- **Input**: Nets, obstructions, and paths parsed from files.
+- **Visualization**: Color-coded grid with paths, pins, and vias.
 
 ---
 
-#### **How to Use**
-1. **Input Files**:
-   - Place `input.txt` and `output.txt` in the project directory.
-   - Type the name of the file in the program when prompted
-   - Ensure the input format matches the expected structure.
-
-2. **Run the Script**:
-   - Execute the Python script:
-     ```
-     python lee_maze_visualization.py
-     ```
-
-3. **Output**:
-   - A graphical visualization of the grid with obstacles, pins, and calculated paths.
-  
----
-
-#### **Key Features**
-- **Clean Visualization**:
-  - No grid lines, only the outer border is displayed for clarity.
-- **Dynamic Path Colors**:
-  - Each net's path is displayed in a distinct color for better differentiation.
-- **Multi-Layer Support**:
-  - Obstructions, pins, and paths are visualized separately for each metal layer.
+**Note**: Ensure correct input/output file formats for accurate results.
 
 ---
 
