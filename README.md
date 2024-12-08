@@ -55,7 +55,7 @@ sudo apt install cmake build-essential
    ```bash
    git clone <repository-url>
    ```
-   Replace `<repository-url>` with the actual URL of the repository.
+   Replace `<repository-url>` with the actual URL of the repository which is https://github.com/MagdElDinAhmed/dd2_routing
 
 2. **Create a Build Directory**:
    ```bash
@@ -80,8 +80,23 @@ sudo apt install cmake build-essential
 ---
 
 ## Windows Operating System
-- make the project
-- Place the input file in the exe folder then build and run `DD2-Maze-Router.cpp` and type the name of the input file when prompted.
+1. **Clone the repository**:
+Using  github desktop select Repository then Clone, select the repository and a location on your device to clone it to.
+
+2. **Build the project**:
+Using a C++ IDE and compiler open the project folder and compile it into a build folder
+
+3. **Copy the tests into the build folder**
+Copy the tests from the repository into the newly made build folder
+
+4. **Run the executable**
+Follow the On-Screen instructions to select the test you want and show the results.
+
+5. **Copy the results to the visualizer**
+After the output text file is generated copy it to the same directory as the visualizer
+
+6. **Run the visualizer**
+Using a python interpreter, run the visualizer script
 
 # Grid Visualization Tool
 
