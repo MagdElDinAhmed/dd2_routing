@@ -5,7 +5,9 @@
 #include "TextParser.h"
 #include <iostream>
 #include <vector>
-
+#include <cmath>   // For sqrt and pow
+#include <limits>  // For numeric_limits
+#include <climits>
 using namespace std;
 
 // Function to calculate Euclidean distance between two points

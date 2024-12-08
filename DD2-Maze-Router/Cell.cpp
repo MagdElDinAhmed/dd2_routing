@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Cell.h"
 #include "CellType.h"
+#include <climits>
 
 using namespace std;
 

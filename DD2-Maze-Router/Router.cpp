@@ -1,5 +1,5 @@
 #include "Router.h"
-
+#include <climits>
 bool Router::route(Net& net, std::vector<std::vector<std::vector<Cell>>>& grid, int bend, int via)
 {
     // Get width and length
