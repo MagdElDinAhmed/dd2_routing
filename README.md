@@ -83,14 +83,14 @@ net1 (1,20,30) (1,19,30)
 
 ### How to Use
 
-1. Set file paths:
+1. Set file paths (e.g.):
    ```python
    input_file = "Test Sets/Test_6/input.txt"
    output_file = "Test Sets/Test_6/output.txt"
    ```
 2. Run the script:
    ```bash
-   python script_name.py
+   python lee_maze_visualization.py
    ```
 3. View the generated plots:
    - **Figure 1**: Routed paths.
