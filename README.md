@@ -94,7 +94,7 @@ net1 (1,20,30) (1,19,30)
    ```
 3. View the generated plots:
    - **Figure 1**: Routed paths.
-   - **Figure 2**: Pins shifted to another layer for comparison.
+   - **Figure 2**: Individual pins at the beginning.
 
 ### Customization
 
