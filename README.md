@@ -276,3 +276,6 @@ Work was initially split as global routing, detailed routing, and visualization.
 - Implemented the routing algorithm based off data provided by Magd's Code
 ### Yousef Mansour
 - Visulaization
+- Building project on ubuntu
+### Slides 
+- https://docs.google.com/presentation/d/1c1ydOJJ4SOwgUeojdOXFXdr8K66P4Fmz7lXkAwwCMws/edit#slide=id.g31ce8893c2b_0_44 
